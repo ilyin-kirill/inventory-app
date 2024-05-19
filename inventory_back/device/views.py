@@ -28,7 +28,7 @@ class FileProperty:
             return False
         return True
 def get_file(request):
-    wb = load_workbook(os.getcwd()+'\\device\\file\\inv-3-blank.xlsx')
+    wb = load_workbook(os.getcwd()+'/device/file/inv-3-blank.xlsx')
     ws=wb["стр2"]
     FP = FileProperty()
     for index, device in enumerate(Device.objects.all()):
@@ -49,5 +49,5 @@ def get_file(request):
             FP.start_row += 1
         else:
             break
-    wb.save(os.getcwd()+'\\device\\file\\result.xlsx')
-    return FileResponse(open(os.getcwd()+'\\device\\file\\result.xlsx', 'rb'))
+    wb.save(os.getcwd()+'/device/file/result.xlsx')
+    return FileResponse(open(os.getcwd()+'/device/file/result.xlsx', 'rb'))
