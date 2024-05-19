@@ -1,4 +1,4 @@
-import { ReactElement, useState, useEffect, useMemo } from 'react';
+import { ReactElement, useState, useEffect, useMemo, useContext } from 'react';
 import {
   Chip,
   Button,
@@ -30,6 +30,7 @@ import { makeInventoryData, TEquipment } from '../../../../shared';
 import { columns } from '../lib';
 import styles from './InventoryTable.module.scss';
 import { useNavigate } from 'react-router-dom';
+import { ActionsContext } from '../../../../actions';
 
 declare module '@tanstack/react-table' {
   //allows us to define custom properties for our columns
@@ -41,6 +42,8 @@ declare module '@tanstack/react-table' {
 function InventoryTable(): ReactElement {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 
+  const { handleOpenCreateInventoryPopup } = useContext(ActionsContext);
+
   const navigate = useNavigate();
 
   const inventoryColumns = useMemo(() => columns, []);
@@ -49,8 +52,6 @@ function InventoryTable(): ReactElement {
   const [data, setData] = useState<TEquipment[]>(() =>
     makeInventoryData(1_000)
   );
-
-  console.log(rowSelection);
 
   const table = useReactTable({
     data,
@@ -73,7 +74,7 @@ function InventoryTable(): ReactElement {
   return (
     <div className={styles.wrapper}>
       <div className={styles.search}>
-        <Filter column={table.getHeaderGroups()[0].headers[0].column} />
+        <Filter column={table.getHeaderGroups()[0].headers[1].column} />
         <Button variant="contained" className={styles.button}>
           <RiExportFill />
           Экспорт
@@ -91,7 +92,11 @@ function InventoryTable(): ReactElement {
           <Button variant="contained" color="error">
             Удалить
           </Button>
-          <Button variant="contained" color="success">
+          <Button
+            variant="contained"
+            color="success"
+            onClick={handleOpenCreateInventoryPopup}
+          >
             Создать
           </Button>
         </div>
