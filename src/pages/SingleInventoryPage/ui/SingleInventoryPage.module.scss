@@ -33,3 +33,9 @@
   align-items: flex-end;
   gap: 16px;
 }
+
+.imageTransparent {
+  width: 50px;
+  position: absolute;
+  top: -300px;
+}

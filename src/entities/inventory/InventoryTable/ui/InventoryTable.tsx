@@ -26,7 +26,7 @@ import {
   HiArrowSmDown,
 } from 'react-icons/hi';
 import { RiExportFill } from 'react-icons/ri';
-import { makeInventoryData, TEquipment } from '../../../../shared';
+import { TEquipment } from '../../../../shared';
 import { columns } from '../lib';
 import styles from './InventoryTable.module.scss';
 import { useNavigate } from 'react-router-dom';
@@ -48,13 +48,44 @@ function InventoryTable(): ReactElement {
 
   const inventoryColumns = useMemo(() => columns, []);
 
+  const getExport = async () => {
+    try {
+      await fetch(`${process.env.REACT_APP_API_URL}/api/v1/get_file`, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+    } catch (_) {
+      // do nothing
+    }
+  };
+
   const [rowSelection, setRowSelection] = useState({});
-  const [data, setData] = useState<TEquipment[]>(() =>
-    makeInventoryData(1_000)
-  );
+  const [data, setData] = useState<TEquipment[]>([]);
+  // const { data } = useSWR(
+  //   `${process.env.REACT_APP_API_URL}/api/v1/device`,
+  //   (url) =>
+  //     fetch(url, {
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //     }).then((res) => res.json()),
+  //   { revalidateOnFocus: false }
+  // );
+
+  // useEffect(() => {
+  //   fetch(`${process.env.REACT_APP_API_URL}/api/v1/device`, {
+  //     method: 'GET',
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //     },
+  //   })
+  //     .then((res) => res.json())
+  //     .then((data) => setData(data));
+  // }, []);
 
   const table = useReactTable({
-    data,
+    data: data ?? [],
     columns: inventoryColumns,
     filterFns: {},
     state: {
@@ -74,8 +105,12 @@ function InventoryTable(): ReactElement {
   return (
     <div className={styles.wrapper}>
       <div className={styles.search}>
-        <Filter column={table.getHeaderGroups()[0].headers[1].column} />
-        <Button variant="contained" className={styles.button}>
+        <Filter column={table.getHeaderGroups()[0].headers[2].column} />
+        <Button
+          variant="contained"
+          className={styles.button}
+          onClick={getExport}
+        >
           <RiExportFill />
           Экспорт
         </Button>
