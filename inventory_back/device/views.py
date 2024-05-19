@@ -31,7 +31,7 @@ def get_file(request):
     wb = load_workbook(os.getcwd()+'/device/file/inv-3-blank.xlsx')
     ws=wb["стр2"]
     FP = FileProperty()
-    for index, device in enumerate(Device.objects.all()):
+    for index, device in enumerate(Device.objects.all(),1):
         ws.cell(row=FP.start_row, column=1, value=index)
         ws.cell(row=FP.start_row, column=3, value=device.account)
         ws.cell(row=FP.start_row, column=6, value=device.characteristics)
