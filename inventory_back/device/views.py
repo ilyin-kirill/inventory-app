@@ -18,7 +18,7 @@ class DeviceViewSet(viewsets.ModelViewSet):
 
 
 class FileProperty:
-    start_row=5
+    start_row=4
     start_col=1
     final_row=17
     final_col=23
@@ -30,7 +30,7 @@ class FileProperty:
 def get_file(request):
     wb = load_workbook(os.getcwd()+'\\device\\file\\inv-3-blank.xlsx')
     ws=wb["стр2"]
-    FP = FileProperty
+    FP = FileProperty()
     for index, device in enumerate(Device.objects.all()):
         ws.cell(row=FP.start_row, column=1, value=index)
         ws.cell(row=FP.start_row, column=3, value=device.account)
