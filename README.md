@@ -1,4 +1,4 @@
-# АНТОН ГЛАВНАЯ СТРАНИЦА ЕСЛИ НАДО /inventory
+# АНТОН ГЛАВНАЯ СТРАНИЦА ЕСЛИ НАДО /inventory НЕ ПЕЙ ПИВО ПЖ
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
