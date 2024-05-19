@@ -1,0 +1,99 @@
+.input {
+  border: 1px solid #e3e3e3;
+  border-radius: 8px;
+  height: 30px;
+  padding: 4px 8px;
+}
+
+.table {
+  border: 1px solid #e3e3e3;
+  border-collapse: collapse;
+}
+
+.th {
+  padding: 16px;
+  border-bottom: 1px solid #e3e3e3;
+  text-align: center;
+  cursor: pointer;
+}
+
+.td {
+  padding: 16px;
+  border-bottom: 1px solid #e3e3e3;
+  text-align: center;
+  cursor: pointer;
+}
+
+.shortText {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.amount {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tr {
+  &:hover {
+    background-color: #efefef;
+  }
+}
+
+.button {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.leftNavBlock {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.navBlock {
+  display: flex;
+  justify-content: space-between;
+}
+
+.search {
+  display: grid;
+  grid-template-columns: 8fr 1fr;
+  gap: 16px;
+}
+
+.buttonIcon {
+  height: 100%;
+}
+
+.goToPage {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.inputGoToPage {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.services {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.buttonsBlock {
+  display: flex;
+  gap: 16px;
+}
