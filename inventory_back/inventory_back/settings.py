@@ -32,7 +32,6 @@ INSTALLED_APPS = [
     'device.apps.DeviceConfig',
     'corsheaders',
     'rest_framework',
-    'corsheaders',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
