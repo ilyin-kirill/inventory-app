@@ -10,7 +10,7 @@ import { ActionsContext } from '../../../../actions';
 import { TEquipment } from '../../../../shared';
 
 type TCreateHookResult = {
-  inventory: TEquipment;
+  inventory: Omit<TEquipment, 'id'>;
   isLoading: boolean;
   handleChange: (e: ChangeEvent<HTMLInputElement>) => void;
   handleSubmit: FormEventHandler<HTMLFormElement>;
@@ -21,7 +21,8 @@ export function useCreate({
 }: {
   initialInventory?: TEquipment;
 }): TCreateHookResult {
-  const [inventory, setInventory] = useState<TEquipment>(defaultInventory);
+  const [inventory, setInventory] =
+    useState<Omit<TEquipment, 'id'>>(defaultInventory);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const { handleClearAction } = useContext(ActionsContext);
@@ -39,7 +40,7 @@ export function useCreate({
     try {
       setIsLoading(true);
 
-      await fetch(`${process.env.REACT_APP_API_URL}/api/v1/device`, {
+      await fetch(`${process.env.REACT_APP_API_URL}/api/v1/device/`, {
         method: 'POST',
         body: JSON.stringify(inventory),
         headers: {

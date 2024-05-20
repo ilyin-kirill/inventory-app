@@ -1,6 +1,7 @@
 import { useState, RefObject, useContext, ChangeEvent, useEffect } from 'react';
 import { jsPDF } from 'jspdf';
 import { TEquipment, generateQR } from '../../../shared';
+import { useNavigate } from 'react-router-dom';
 import { ActionsContext } from '../../../actions';
 import { defaultInventory } from '../../../features/create-inventory/CreateInventoryModal/lib';
 
@@ -10,9 +11,16 @@ type TParameters = {
 };
 
 export function useInventory({ qrCodeRef, initialInventory }: TParameters) {
+  const [openSnack, setOpenSnack] = useState<boolean>(false);
   const [qrCodeData, setQrCodeData] = useState<string>('');
 
+  const navigate = useNavigate();
+
   const doc = new jsPDF();
+
+  const handleCloseSnack = () => {
+    setOpenSnack(false);
+  };
 
   const onGenerateQR = async () => {
     const qrCode = (await generateQR(window.location.href)) ?? '';
@@ -31,6 +39,22 @@ export function useInventory({ qrCodeRef, initialInventory }: TParameters) {
     }
   };
 
+  const defaultInventory: TEquipment = {
+    id: 0,
+    account: '',
+    characteristics: '',
+    code: '',
+    code_okei: '',
+    count_name: 'шт',
+    inventory_num: '',
+    pasport: '',
+    price: '',
+    fact_count: '',
+    fact_sum: '',
+    accounting_count: '',
+    accounting_sum: '',
+  };
+
   const [inventory, setInventory] = useState<TEquipment>(
     initialInventory ?? defaultInventory
   );
@@ -39,6 +63,7 @@ export function useInventory({ qrCodeRef, initialInventory }: TParameters) {
   const { handleClearAction } = useContext(ActionsContext);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    // @ts-ignore
     setInventory((prevState) => ({
       ...prevState,
       [e.target.name]: e.target.value,
@@ -46,7 +71,7 @@ export function useInventory({ qrCodeRef, initialInventory }: TParameters) {
   };
 
   const handleSubmit = async () => {
-    if (!inventory.id) {
+    if (!inventory?.id) {
       return;
     }
 
@@ -54,7 +79,7 @@ export function useInventory({ qrCodeRef, initialInventory }: TParameters) {
       setIsLoading(true);
 
       await fetch(
-        `${process.env.REACT_APP_API_URL}/api/v1/device/${inventory.id}`,
+        `${process.env.REACT_APP_API_URL}/api/v1/device/${inventory.id}/`,
         {
           method: 'PUT',
           body: JSON.stringify(inventory),
@@ -65,6 +90,10 @@ export function useInventory({ qrCodeRef, initialInventory }: TParameters) {
       );
 
       handleClearAction?.();
+
+      setOpenSnack(true);
+
+      setTimeout(() => navigate('/inventory'), 1000);
     } finally {
       setIsLoading(false);
     }
@@ -80,6 +109,8 @@ export function useInventory({ qrCodeRef, initialInventory }: TParameters) {
 
   return {
     qrCodeData,
+    openSnack,
+    handleCloseSnack,
     inventory,
     isLoading,
     handleChange,

@@ -25,12 +25,18 @@ import {
   HiArrowSmUp,
   HiArrowSmDown,
 } from 'react-icons/hi';
+import { FaCamera } from 'react-icons/fa';
 import { RiExportFill } from 'react-icons/ri';
 import { TEquipment } from '../../../../shared';
 import { columns } from '../lib';
 import styles from './InventoryTable.module.scss';
 import { useNavigate } from 'react-router-dom';
 import { ActionsContext } from '../../../../actions';
+import useSWR from 'swr';
+import { BottomSheet } from 'react-spring-bottom-sheet';
+import { Html5QrcodeScanner } from 'html5-qrcode';
+import 'react-spring-bottom-sheet/dist/style.css';
+import { ScannerPage } from '../../../../pages';
 
 declare module '@tanstack/react-table' {
   //allows us to define custom properties for our columns
@@ -42,6 +48,7 @@ declare module '@tanstack/react-table' {
 function InventoryTable(): ReactElement {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
 
+  const [openScanner, setOpenScanner] = useState<boolean>(false);
   const { handleOpenCreateInventoryPopup } = useContext(ActionsContext);
 
   const navigate = useNavigate();
@@ -50,28 +57,36 @@ function InventoryTable(): ReactElement {
 
   const getExport = async () => {
     try {
-      await fetch(`${process.env.REACT_APP_API_URL}/api/v1/get_file`, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+      const response = await fetch(
+        `${process.env.REACT_APP_API_URL}/api/v1/get_file`,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+
+      const data = await response.blob();
+
+      const file = window.URL.createObjectURL(data);
+      window.open(file);
     } catch (_) {
       // do nothing
     }
   };
 
   const [rowSelection, setRowSelection] = useState({});
-  const [data, setData] = useState<TEquipment[]>([]);
-  // const { data } = useSWR(
-  //   `${process.env.REACT_APP_API_URL}/api/v1/device`,
-  //   (url) =>
-  //     fetch(url, {
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //       },
-  //     }).then((res) => res.json()),
-  //   { revalidateOnFocus: false }
-  // );
+  // const [data, setData] = useState<TEquipment[]>([]);
+  const { data } = useSWR(
+    `${process.env.REACT_APP_API_URL}/api/v1/device/`,
+    (url) =>
+      fetch(url, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }).then((res) => res.json()),
+    { revalidateOnFocus: false }
+  );
 
   // useEffect(() => {
   //   fetch(`${process.env.REACT_APP_API_URL}/api/v1/device`, {
@@ -106,14 +121,23 @@ function InventoryTable(): ReactElement {
     <div className={styles.wrapper}>
       <div className={styles.search}>
         <Filter column={table.getHeaderGroups()[0].headers[2].column} />
-        <Button
-          variant="contained"
-          className={styles.button}
-          onClick={getExport}
-        >
-          <RiExportFill />
-          Экспорт
-        </Button>
+        <div className={styles.buttonsBlock}>
+          <Button
+            variant="contained"
+            className={styles.button}
+            onClick={() => navigate('/scanner')}
+          >
+            <FaCamera />
+          </Button>
+          <Button
+            variant="contained"
+            className={styles.button}
+            onClick={getExport}
+          >
+            <RiExportFill />
+            Экспорт
+          </Button>
+        </div>
       </div>
       <div className={styles.services}>
         <div className={styles.amount}>
@@ -185,11 +209,7 @@ function InventoryTable(): ReactElement {
                       key={cell.id}
                       onClick={() => {
                         if (cell.column.id !== 'select') {
-                          localStorage.setItem(
-                            'inventoryItem',
-                            JSON.stringify(row.original)
-                          );
-                          navigate(row.original.code);
+                          navigate(row.original.id.toString());
                         }
                       }}
                     >
@@ -328,7 +348,7 @@ function Filter({ column }: { column: Column<any, unknown> }) {
     <DebouncedInput
       className="w-36 border shadow rounded"
       onChange={(value) => column.setFilterValue(value)}
-      placeholder="Поиск по названию"
+      placeholder="Поиск по наименованию"
       type="text"
       value={(columnFilterValue ?? '') as string}
     />

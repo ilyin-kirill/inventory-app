@@ -20,7 +20,7 @@ function CreateInventoryModal(): ReactElement {
                 label={item.label}
                 name={item.name}
                 size="small"
-                value={inventory[item.name as keyof TEquipment]}
+                value={inventory[item.name as keyof Omit<TEquipment, 'id'>]}
                 onChange={handleChange}
               />
             ))}

@@ -3,7 +3,7 @@ export type TAvailibility = {
 };
 
 export type TEquipment = {
-  id?: number;
+  id: number;
   account: string;
   characteristics: string;
   code: string;

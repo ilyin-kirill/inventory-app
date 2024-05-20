@@ -1,5 +1,5 @@
 import { ReactElement, useState, useRef, useEffect } from 'react';
-import { Button, TextField } from '@mui/material';
+import { Button, TextField, Snackbar, Alert } from '@mui/material';
 import { PageWrapper } from '../../PageWrapper';
 import styles from './SingleInventoryPage.module.scss';
 import { useInventory } from '../model';
@@ -14,7 +14,7 @@ function SingleInventoryPage(): ReactElement {
   const { id } = useParams();
 
   const { data } = useSWR(
-    `${process.env.REACT_APP_API_URL}/api/v1/device/${id}`,
+    `${process.env.REACT_APP_API_URL}/api/v1/device/${id}/`,
     (url: string) =>
       fetch(url, {
         headers: {
@@ -26,14 +26,14 @@ function SingleInventoryPage(): ReactElement {
 
   const {
     qrCodeData,
+    openSnack,
     onGenerateQR,
+    handleCloseSnack,
     inventory,
     isLoading,
     handleChange,
     handleSubmit,
-  } = useInventory({ qrCodeRef });
-
-  // TODO: initialProperty
+  } = useInventory({ qrCodeRef, initialInventory: data });
 
   return (
     <PageWrapper>
@@ -51,7 +51,7 @@ function SingleInventoryPage(): ReactElement {
                 <TextField
                   label={item.label}
                   name={item.name}
-                  value={inventory[item.name as keyof TEquipment]}
+                  value={inventory?.[item.name as keyof TEquipment]}
                   onChange={handleChange}
                 />
               ))}
@@ -71,6 +71,22 @@ function SingleInventoryPage(): ReactElement {
           />
         </div>
       </div>
+      <Snackbar
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        autoHideDuration={3000}
+        open={openSnack}
+        onClose={handleCloseSnack}
+        message="Оборудование успешно сохранено"
+      >
+        <Alert
+          onClose={handleCloseSnack}
+          severity="success"
+          variant="filled"
+          sx={{ width: '100%' }}
+        >
+          Оборудование успешно сохранено!
+        </Alert>
+      </Snackbar>
     </PageWrapper>
   );
 }

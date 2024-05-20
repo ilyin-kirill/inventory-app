@@ -51,7 +51,7 @@ export const textFieldsConfig = [
   },
 ];
 
-export const defaultInventory: TEquipment = {
+export const defaultInventory: Omit<TEquipment, 'id'> = {
   account: '',
   characteristics: '',
   code: '',

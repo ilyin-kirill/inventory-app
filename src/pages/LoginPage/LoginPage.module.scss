@@ -1,0 +1,21 @@
+.wrapper {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  box-shadow: 3px 1px 23px 4px rgba(34, 60, 80, 0.23);
+  border-radius: 16px;
+  padding: 32px;
+  text-align: center;
+}
+
+.button {
+  width: 100%;
+}

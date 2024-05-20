@@ -80,7 +80,7 @@ export const columns: ColumnDef<TEquipment, any>[] = [
   {
     accessorFn: (row) => row.fact_count,
     id: 'fact_count',
-    header: () => <span>Фактическое кол-во</span>,
+    header: () => <span>Фактическое количество</span>,
     cell: (info) => info.getValue(),
     meta: {
       filterVariant: 'range',
@@ -98,7 +98,7 @@ export const columns: ColumnDef<TEquipment, any>[] = [
   {
     accessorFn: (row) => row.accounting_count,
     id: 'accountant_count',
-    header: () => <span>Кол-во по бух. учету</span>,
+    header: () => <span>Количество по бухгалтерскому учету</span>,
     cell: (info) => info.getValue(),
     meta: {
       filterVariant: 'range',
@@ -107,7 +107,7 @@ export const columns: ColumnDef<TEquipment, any>[] = [
   {
     accessorFn: (row) => row.accounting_sum,
     id: 'accounting_sum',
-    header: () => <span>По бух. сумма</span>,
+    header: () => <span>Сумма по бухгалтерскому учету</span>,
     cell: (info) => info.getValue(),
   },
 ];
